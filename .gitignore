@@ -1,0 +1,14 @@
+venv/
+.env
+__pycache__/
+*.pyc
+
+.airflowignore
+
+logs/
+plugins/
+
+target/
+dbt_packages/
+
+.DS_Store

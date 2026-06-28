@@ -1,0 +1,7 @@
+kafka-python
+faker
+psycopg2-binary
+python-dotenv
+apache-airflow
+dbt-postgres
+pandas
