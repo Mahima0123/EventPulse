@@ -56,4 +56,8 @@ for message in consumer:
             datetime.fromisoformat(event["event_timestamp"])
         ))
         conn.commit()
-        print(f"Inserted: {event}")
+        print(f"Inserted: {event['event_type']} | {event['user_id']}")
+
+    except Exception as e:
+        print("Error inserting event:", e)
+        conn.rollback()
