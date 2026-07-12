@@ -12,3 +12,8 @@ target/
 dbt_packages/
 
 .DS_Store
+
+# dbt generated files
+target/
+dbt_packages/
+logs/

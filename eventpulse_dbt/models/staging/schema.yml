@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_user_events
+
+    description: >
+      Cleaned user events from Kafka stream.
+
+    columns:
+
+      - name: event_id
+        description: Unique identifier for each event.
+        tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        description: User who generated the event.
+        tests:
+          - not_null
+
+      - name: event_type
+        description: Type of user activity.
+        tests:
+          - accepted_values:
+              values:
+                - login
+                - search
+                - video_play
+                - video_pause
+                - video_complete
+                - like_content
+                - subscription_purchase

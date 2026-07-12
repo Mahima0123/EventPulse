@@ -61,3 +61,32 @@ for message in consumer:
     except Exception as e:
         print("Error inserting event:", e)
         conn.rollback()
+
+for message in consumer:
+    event = message.value
+    try:
+        cur.execute("""
+            INSERT INTO raw_user_events (
+                event_id,
+                user_id,
+                event_type,
+                content_id,
+                country,
+                subscription_type,
+                event_timestamp
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (event_id) DO NOTHING
+        """, (
+            event["event_id"],
+            event["user_id"],
+            event["event_type"],
+            event["content_id"],
+            event["country"],
+            event["subscription_type"],
+            datetime.fromisoformat(event["event_timestamp"])
+        ))
+        conn.commit()
+        print(f"Inserted: {event['event_type']} | {event['user_id']}")
+    except Exception as e:
+        print("Error inserting event:", e)

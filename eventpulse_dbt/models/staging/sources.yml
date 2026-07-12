@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw
+    database: eventpulse
+    schema: public
+
+    tables:
+      - name: raw_user_events
+        description: Raw streaming events coming from Kafka.
