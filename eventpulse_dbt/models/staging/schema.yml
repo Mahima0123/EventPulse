@@ -23,11 +23,12 @@ models:
         description: Type of user activity.
         tests:
           - accepted_values:
-              values:
-                - login
-                - search
-                - video_play
-                - video_pause
-                - video_complete
-                - like_content
-                - subscription_purchase
+              arguments:
+                values:
+                  - login
+                  - search
+                  - video_play
+                  - video_pause
+                  - video_complete
+                  - like_content
+                  - subscription_purchase
