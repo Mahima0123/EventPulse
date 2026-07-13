@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: fct_user_events
+    description: Fact table containing user events enriched with session information.
+
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+
+      - name: session_id
+        tests:
+          - not_null
+
+      - name: user_id
+        tests:
+          - not_null
