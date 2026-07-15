@@ -1,6 +1,7 @@
 version: 2
 
 models:
+
   - name: fct_user_events
     description: Fact table containing user events enriched with session information.
 
@@ -16,4 +17,13 @@ models:
 
       - name: user_id
         tests:
+          - not_null
+
+  - name: mart_daily_activity
+    description: Daily business KPIs for the streaming platform.
+
+    columns:
+      - name: activity_date
+        tests:
+          - unique
           - not_null
