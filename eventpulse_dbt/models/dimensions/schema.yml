@@ -1,0 +1,20 @@
+version: 2
+
+models:
+
+  - name: dim_users
+    description: One record per user.
+
+    columns:
+
+      - name: user_id
+        description: Unique user identifier.
+        tests:
+          - unique
+          - not_null
+
+      - name: country
+        description: User's latest known country.
+
+      - name: subscription_type
+        description: User subscription plan.
