@@ -3,12 +3,15 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     platform: linux/amd64
+
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     platform: linux/amd64
+
     depends_on:
       - zookeeper
 
@@ -17,15 +20,20 @@ services:
 
     environment:
       KAFKA_BROKER_ID: 1
+
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
 
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
+
+
   postgres:
     image: postgres:14
+
     container_name: eventpulse-db
 
     environment:
@@ -35,3 +43,87 @@ services:
 
     ports:
       - "${POSTGRES_PORT}:5432"
+
+
+
+  airflow-db:
+    image: postgres:14
+
+    container_name: airflow-db
+
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+
+    ports:
+      - "5436:5432"
+
+
+
+  airflow-init:
+    image: apache/airflow:3.0.6
+
+    depends_on:
+      - airflow-db
+
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+
+
+    command:
+      - bash
+      - -c
+      - |
+        airflow db migrate
+
+
+
+  airflow-scheduler:
+    image: apache/airflow:3.0.6
+
+    depends_on:
+      - airflow-init
+
+    environment:
+
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+
+
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+
+
+    command:
+      - scheduler
+
+
+
+  airflow-api:
+    image: apache/airflow:3.0.6
+
+    depends_on:
+      airflow-init:
+          condition: service_completed_successfully
+
+    ports:
+      - "8080:8080"
+
+
+    environment:
+
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+
+
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+
+
+    command:
+      - api-server

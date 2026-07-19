@@ -18,3 +18,17 @@ models:
 
       - name: subscription_type
         description: User subscription plan.
+      
+  - name: dim_content
+    description: One record per content item.
+
+    columns:
+
+      - name: content_id
+        description: Unique content identifier.
+        tests:
+          - unique
+          - not_null
+
+      - name: total_events
+        description: Number of events generated for this content.
